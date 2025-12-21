@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndiGo - Flight Cancellation & Refund</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .refund-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 50px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .card-header h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            background: #fff;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .refund-card {
+                padding: 30px 20px;
+            }
+
+            .card-header h1 {
+                font-size: 24px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">6E</div>
+            <div class="logo-text">IndiGo</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#bookings">Bookings</a></li>
+            <li><a href="#refund">Refund</a></li>
+            <li><a href="#support">Support</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="refund-card">
+            <div class="card-header">
+                <h1>Flight Cancellation & Refund</h1>
+                <p>Process your refund request in just a few steps</p>
+            </div>
+
+            <div class="info-box">
+                <p><strong>📋 Required Information:</strong> Please have your PNR number and registered email/last name ready. Refund processing typically takes 5-7 business days.</p>
+            </div>
+
+            <form id="refundForm">
+                <div class="form-group">
+                    <label for="pnr">PNR / Booking Reference *</label>
+                    <input 
+                        type="text" 
+                        id="pnr" 
+                        name="pnr-booking-ref" 
+                        placeholder="Enter your 6-character PNR (e.g., ABC123)" 
+                        required
+                        maxlength="6"
+                        pattern="[A-Z0-9]{6}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address / Last Name *</label>
+                    <input 
+                        type="text" 
+                        id="email" 
+                        name="email-last-name" 
+                        placeholder="Enter your email or last name" 
+                        required
+                    >
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">Quick Process</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">100% Secure</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-text">Full Refund</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit Refund Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#about">About Us</a>
+            <a href="#terms">Terms & Conditions</a>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#contact">Contact</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <p>&copy; 2025 IndiGo Airlines. All rights reserved.</p>
+    </div>
+
+    <script>
+        const form = document.getElementById('refundForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const pnrInput = document.getElementById('pnr');
+
+        // Auto-uppercase PNR input
+        pnrInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const pnr = pnrInput.value;
+            const email = document.getElementById('email').value;
+
+            // Basic validation
+            if (pnr.length !== 6) {
+                alert('PNR must be exactly 6 characters');
+                return;
+            }
+
+            // Simulate submission
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                submitBtn.textContent = '✓ Request Submitted';
+                submitBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+                
+                setTimeout(() => {
+                    alert(`Refund request submitted successfully!\n\nPNR: ${pnr}\nReference: REF${Date.now()}\n\nYou will receive a confirmation email shortly.`);
+                    form.reset();
+                    submitBtn.textContent = 'Submit Refund Request';
+                    submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    submitBtn.disabled = false;
+                }, 1000);
+            }, 2000);
+        });
+
+        // Add floating animation to card
+        const card = document.querySelector('.refund-card');
+        let floatDirection = 1;
+        
+        setInterval(() => {
+            const currentTransform = window.getComputedStyle(card).transform;
+            if (currentTransform === 'none') return;
+            
+            floatDirection *= -1;
+        }, 3000);
+    </script>
+</body>
+</html>

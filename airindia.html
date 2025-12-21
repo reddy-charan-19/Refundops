@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air India - Refund Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E41E3F;
+            --dark-red: #C41830;
+            --light-red: #F5E5E8;
+            --white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-light: #666666;
+            --border-gray: #EEEEEE;
+            --success-green: #10B981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-decoration: none;
+        }
+
+        .logo::before {
+            content: "✈️";
+            font-size: 2rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-red);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: var(--white);
+            padding: 6rem 2rem;
+            text-align: center;
+            animation: slideInDown 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+            opacity: 0.95;
+        }
+
+        /* Form Section */
+        .form-section {
+            max-width: 600px;
+            margin: -3rem auto 4rem;
+            padding: 2.5rem;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(228, 30, 63, 0.15);
+            animation: slideInUp 0.8s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-section .subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(228, 30, 63, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(228, 30, 63, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(228, 30, 63, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            animation: popIn 0.5s ease;
+            max-width: 400px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message::before {
+            content: "✓";
+            display: block;
+            width: 80px;
+            height: 80px;
+            background: var(--success-green);
+            color: var(--white);
+            font-size: 3rem;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .success-message h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .success-message button {
+            background: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-message button:hover {
+            background: var(--dark-red);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Content Section */
+        .content-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--text-dark);
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .benefit-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(228, 30, 63, 0.15);
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .benefit-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            margin-top: 6rem;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        footer a {
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                margin-left: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .form-section {
+                margin: -2rem 1rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">AIR INDIA</a>
+            <nav>
+                <a href="#refund">Refund Policy</a>
+                <a href="#benefits">Process</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Check Your Refund Status</h1>
+        <p>Quick and easy refund management for Air India flights</p>
+    </section>
+
+    <!-- Refund Form -->
+    <section class="form-section">
+        <h2>Refund Status Tracker</h2>
+        <p class="subtitle">Enter your booking details to track your refund</p>
+        <form id="refundForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="pnr">PNR Number</label>
+                <input 
+                    type="text" 
+                    id="pnr" 
+                    name="pnr"
+                    placeholder="e.g., ABC1234"
+                    maxlength="10"
+                >
+            </div>
+            <div class="form-group">
+                <label for="email">Email ID</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email"
+                    placeholder="your.email@example.com"
+                >
+            </div>
+            <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+        </form>
+    </section>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const pnr = document.getElementById('pnr').value;
+            const email = document.getElementById('email').value;
+            alert('Form Submitted!\nPNR: ' + pnr + '\nEmail: ' + email);
+            console.log('Form submitted with PNR:', pnr, 'Email:', email);
+        }
+    </script>
+
+    <!-- Benefits Section -->
+    <section class="content-section" id="benefits">
+        <h2 class="section-title">Why Choose Air India Refunds</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <h3>⚡ Lightning Fast</h3>
+                <p>Get your refund processed within 5-7 business days. Quick and hassle-free process.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>🛡️ 100% Secure</h3>
+                <p>Your data is encrypted and protected. We follow international security standards.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>📞 24/7 Support</h3>
+                <p>Our customer service team is available round the clock to assist you anytime.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>✈️ Full Transparency</h3>
+                <p>Real-time tracking of your refund status. Know exactly where your money is.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>💳 Multiple Options</h3>
+                <p>Get refunds to your original payment method or as Air India travel credits.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>🌍 Global Coverage</h3>
+                <p>Process refunds for flights from anywhere in the world without any restrictions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Air India Limited. All rights reserved.</p>
+        <p>
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms & Conditions</a> | 
+            <a href="#">Contact Us</a>
+        </p>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-message" id="successMessage">
+        <h3>Form Submitted!</h3>
+        <p>Your refund status request has been received. We'll send you an update via email shortly.</p>
+        <button onclick="closeSuccess()">Close</button>
+    </div>
+
+    <script>
+        const form = document.getElementById('refundForm');
+        const successMessage = document.getElementById('successMessage');
+        const overlay = document.getElementById('overlay');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const pnr = document.getElementById('pnr').value;
+            const email = document.getElementById('email').value;
+
+            // Show success modal
+            successMessage.classList.add('show');
+            overlay.classList.add('show');
+
+            // Reset form
+            form.reset();
+
+            console.log("[v0] Form submitted with PNR:", pnr, "Email:", email);
+        });
+
+        function closeSuccess() {
+            successMessage.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        // Close modal when clicking overlay
+        overlay.addEventListener('click', closeSuccess);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
